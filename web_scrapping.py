@@ -2,9 +2,13 @@ import pprint as pp
 import numpy as np
 from bs4 import BeautifulSoup
 from termcolor import colored
+import requests
+import re
 
 
 
+
+# PULL RECIPE DATA
 
 R = 'no'
 if R == 'yes':
@@ -157,31 +161,74 @@ if R == 'yes':
 
 
 
+# PULL REVIEWER DATA
 
 
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import os
+
+chromedriver = "/Users/ryan/Desktop/Programming/AllRecipes/chromedriver"
+os.environ["webdriver.chrome.driver"] = chromedriver
+driver = webdriver.Chrome(chromedriver)
+p = re.compile( r'[\d]+')
 
 
-
-
-
-n= 2010
-for i in range(n,n+1):
-
+n = 2005
+for i in range(n, n+1):
     URL = 'http://allrecipes.com/cook/' + str(i) + '/reviews/'
+    driver.get(URL)
 
-    URL = 'http://allrecipes.com/cook/2010/reviews/'
-    response = requests.get(URL ).content
-    soup = BeautifulSoup(response, 'html.parser')
+    print( '\n' + 'COOK: ' +str(i))
+
+    elems = driver.find_elements_by_class_name("profile-review-card")
+    for x in elems:
+        z = x.find_element_by_class_name('ng-scope')
+        link = z.get_attribute('href')
+
+        if link.find('personal') == -1:
+            link = link[29:].rstrip('/').split('/')
+
+            recipenum = link[0]
+            name = link[1]
+            # recipenum = p.findall(z.get_attribute('href'))[0]
+
+            zz = x.find_element_by_class_name('rated-review--stars')
+            zz = zz.find_element_by_class_name('ng-scope')
+            zz = zz.find_element_by_class_name('ng-isolate-scope')
+
+            ranking = zz.get_attribute('data-rating')
+            print( str(name) + ' '+ str(recipenum) , colored(ranking,'red'))
 
 
-    import pprint
-    pp = pprint.PrettyPrinter(indent=2)
-    pp.pprint(response)
 
 
 
-    #TITLE
-    X = soup.find_all('div', class_ = 'grid-profile-card'  )
 
-    Y = soup.find_all('h4', class_ ='light' )[0].text
+driver.close()
 
+
+
+# y = x.get_attribute('innerHTML')
+
+# ghost = ghost.Ghost()
+# page, extra_resources = ghost.open("http://jeanphi.fr")
+# assert page.http_status==200 and 'jeanphix' in ghost.content
+#
+# n= 2010
+# for i in range(n,n):
+#
+#     # URL = 'http://allrecipes.com/cook/' + str(i) + '/reviews/'
+#     #
+#     # URL = 'http://allrecipes.com/cook/2010/reviews/'
+#     # response = requests.get(URL ).content
+#
+#     URL = 'http://allrecipes.com/cook/2010/reviews/'
+#     headers = {'user-agent', 'Mozilla/5.0'}
+#     response = requests.get(URL,headers=headers).content
+#
+#
+#     soup = BeautifulSoup(response, 'html.parser')
+#
+#     #TITLE
+#     X = soup.find_all('article', class_ = "profile-review-card"  )
