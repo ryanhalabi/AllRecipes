@@ -163,52 +163,123 @@ if R == 'yes':
 
 # PULL REVIEWER DATA
 
+S = 'no'
+if S == 'yes':
 
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-import os
+    from selenium import webdriver
+    from selenium.webdriver.common.keys import Keys
+    import os
 
-chromedriver = "/Users/ryan/Desktop/Programming/AllRecipes/chromedriver"
-os.environ["webdriver.chrome.driver"] = chromedriver
-driver = webdriver.Chrome(chromedriver)
-p = re.compile( r'[\d]+')
-
-
-n = 2005
-for i in range(n, n+1):
-    URL = 'http://allrecipes.com/cook/' + str(i) + '/reviews/'
-    driver.get(URL)
-
-    print( '\n' + 'COOK: ' +str(i))
-
-    elems = driver.find_elements_by_class_name("profile-review-card")
-    for x in elems:
-        z = x.find_element_by_class_name('ng-scope')
-        link = z.get_attribute('href')
-
-        if link.find('personal') == -1:
-            link = link[29:].rstrip('/').split('/')
-
-            recipenum = link[0]
-            name = link[1]
-            # recipenum = p.findall(z.get_attribute('href'))[0]
-
-            zz = x.find_element_by_class_name('rated-review--stars')
-            zz = zz.find_element_by_class_name('ng-scope')
-            zz = zz.find_element_by_class_name('ng-isolate-scope')
-
-            ranking = zz.get_attribute('data-rating')
-            print( str(name) + ' '+ str(recipenum) , colored(ranking,'red'))
+    chromedriver = "/Users/ryan/Desktop/Programming/AllRecipes/chromedriver"
+    os.environ["webdriver.chrome.driver"] = chromedriver
+    driver = webdriver.Chrome(chromedriver)
+    p = re.compile( r'[\d]+')
 
 
 
+    n = 2010
+    for i in range(n, n+1):
+        URL = 'http://allrecipes.com/cook/' + str(i) + '/reviews/'
+        driver.get(URL)
+
+        print( '\n' + 'COOK: ' +str(i))
+
+        elems = driver.find_elements_by_class_name("profile-review-card")
+        for x in elems:
+            z = x.find_element_by_class_name('ng-scope')
+            link = z.get_attribute('href')
+
+            if link.find('personal') == -1:
+                link = link[29:].rstrip('/').split('/')
+
+                recipenum = link[0]
+                name = link[1]
+                # recipenum = p.findall(z.get_attribute('href'))[0]
+
+                zz = x.find_element_by_class_name('rated-review--stars')
+                zz = zz.find_element_by_class_name('ng-scope')
+                zz = zz.find_element_by_class_name('ng-isolate-scope')
+
+                ranking = zz.get_attribute('data-rating')
+                print( str(name) + ' '+ str(recipenum) , colored(ranking,'red'))
 
 
 
-driver.close()
 
 
 
+    driver.close()
+
+
+
+
+#GHOST
+
+#
+#
+# import ghost
+# ghost = ghost.Ghost()
+# session = ghost.start()
+# session.wait_timeout = 999
+#
+#
+# page, resources = session.open('http://allrecipes.com/cook/2010/reviews/')
+#
+#
+# # page, resources = session.open('https://www.google.com')
+#
+# soup2 = BeautifulSoup(page.content, 'html.parser')
+# soup = BeautifulSoup(page.content)
+#
+# reviews = soup.find_all('article', class_ ='profile-review-card' )
+#
+#
+#
+# reviews2 = soup2.find_all('article', class_ ='profile-review-card' )
+#
+#
+
+
+
+
+
+#DUNNO
+import sys
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
+from PyQt4.QtWebKit import *
+from lxml import html
+
+#Take this class for granted.Just use result of rendering.
+class Render(QWebPage):
+  def __init__(self, url):
+    self.app = QApplication(sys.argv)
+    QWebPage.__init__(self)
+    self.loadFinished.connect(self._loadFinished)
+    self.mainFrame().load(QUrl(url))
+    self.app.exec_()
+
+  def _loadFinished(self, result):
+    self.frame = self.mainFrame()
+    self.app.quit()
+
+url = 'http://pycoders.com/archive/'
+r = Render(url)
+result = r.frame.toHtml()
+#This step is important.Converting QString to Ascii for lxml to process
+archive_links = html.fromstring(str(result.toAscii()))
+print archive_links
+
+
+
+
+#
+# g = ghost.Ghost()
+# with g.start() as session:
+#     page, extra_resources = session.open("https://www.debian.org")
+#     if page.http_status == 200 and \
+#             'The Universal Operating System' in page.content:
+#         print("Good!")
 # y = x.get_attribute('innerHTML')
 
 # ghost = ghost.Ghost()
