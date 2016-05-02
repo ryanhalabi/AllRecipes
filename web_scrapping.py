@@ -242,13 +242,15 @@ if S == 'yes':
 
 
 
-
-#DUNNO
+#
+# #PYQT4
 import sys
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from PyQt4.QtWebKit import *
 from lxml import html
+
+
 
 #Take this class for granted.Just use result of rendering.
 class Render(QWebPage):
@@ -263,12 +265,41 @@ class Render(QWebPage):
     self.frame = self.mainFrame()
     self.app.quit()
 
-url = 'http://pycoders.com/archive/'
+
+
+# app = QApplication(sys.argv)
+#
+# w = QWidget()
+# w.resize(250, 150)
+# w.move(300, 300)
+# w.setWindowTitle('Simple')
+# w.show()
+#
+# sys.exit(app.exec_())
+
+
+# url = 'http://pycoders.com/archive/'
+url = 'http://allrecipes.com/cook/2010/reviews/'
+
 r = Render(url)
 result = r.frame.toHtml()
 #This step is important.Converting QString to Ascii for lxml to process
-archive_links = html.fromstring(str(result.toAscii()))
-print archive_links
+# archive_links = html.fromstring(str(result.toAscii()))
+archive_links = html.fromstring(result)
+
+# archive_links = html.fromstring(str(result.encode('ascii')))
+print(archive_links)
+
+
+
+
+# >>> b'a string'.decode('ascii')
+# 'a string'
+
+
+
+
+
 
 
 
