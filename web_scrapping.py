@@ -220,7 +220,7 @@ if S == 'yes':
 # import ghost
 # ghost = ghost.Ghost()
 # session = ghost.start()
-# session.wait_timeout = 999
+# session.wait_timeout = 10
 #
 #
 # page, resources = session.open('http://allrecipes.com/cook/2010/reviews/')
@@ -237,100 +237,54 @@ if S == 'yes':
 #
 # reviews2 = soup2.find_all('article', class_ ='profile-review-card' )
 #
+# b = soup.find_all('div', class_="profile-shell full-page ng-scope")
 #
+#
+# a = soup.find_all('div', class_="profile-wrapper ng-scope")
+
+
 
 
 
 
 #
+#
+# #
 # #PYQT4
+
+
 import sys
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from PyQt4.QtWebKit import *
-from lxml import html
 
 
 
-#Take this class for granted.Just use result of rendering.
 class Render(QWebPage):
   def __init__(self, url):
     self.app = QApplication(sys.argv)
-    QWebPage.__init__(self)
-    self.loadFinished.connect(self._loadFinished)
-    self.mainFrame().load(QUrl(url))
-    self.app.exec_()
+  #   QWebPage.__init__(self)
+  #   self.loadFinished.connect(self._loadFinished)
+  #   self.mainFrame().load(QUrl(url))
+  #   self.app.exec_()
+  #
+  # def _loadFinished(self, result):
+  #   self.frame = self.mainFrame()
+  #   self.app.quit()
 
-  def _loadFinished(self, result):
-    self.frame = self.mainFrame()
-    self.app.quit()
-
-
-
-# app = QApplication(sys.argv)
-#
-# w = QWidget()
-# w.resize(250, 150)
-# w.move(300, 300)
-# w.setWindowTitle('Simple')
-# w.show()
-#
-# sys.exit(app.exec_())
-
-
-# url = 'http://pycoders.com/archive/'
-url = 'http://allrecipes.com/cook/2010/reviews/'
+url = 'http://allrecipes.com/cook/2011/reviews/'
 
 r = Render(url)
-result = r.frame.toHtml()
-#This step is important.Converting QString to Ascii for lxml to process
-# archive_links = html.fromstring(str(result.toAscii()))
-archive_links = html.fromstring(result)
-
-# archive_links = html.fromstring(str(result.encode('ascii')))
-print(archive_links)
+# result = r.frame.toHtml()
 
 
+x = BeautifulSoup(result, 'html.parser')
 
 
-# >>> b'a string'.decode('ascii')
-# 'a string'
+#look up parts of website
+a = x.find_all('div', class_="profile-shell full-page ng-scope")
+
+a = x.find_all('div', class_="profile-wrapper ng-scope")
 
 
 
-
-
-
-
-
-
-#
-# g = ghost.Ghost()
-# with g.start() as session:
-#     page, extra_resources = session.open("https://www.debian.org")
-#     if page.http_status == 200 and \
-#             'The Universal Operating System' in page.content:
-#         print("Good!")
-# y = x.get_attribute('innerHTML')
-
-# ghost = ghost.Ghost()
-# page, extra_resources = ghost.open("http://jeanphi.fr")
-# assert page.http_status==200 and 'jeanphix' in ghost.content
-#
-# n= 2010
-# for i in range(n,n):
-#
-#     # URL = 'http://allrecipes.com/cook/' + str(i) + '/reviews/'
-#     #
-#     # URL = 'http://allrecipes.com/cook/2010/reviews/'
-#     # response = requests.get(URL ).content
-#
-#     URL = 'http://allrecipes.com/cook/2010/reviews/'
-#     headers = {'user-agent', 'Mozilla/5.0'}
-#     response = requests.get(URL,headers=headers).content
-#
-#
-#     soup = BeautifulSoup(response, 'html.parser')
-#
-#     #TITLE
-#     X = soup.find_all('article', class_ = "profile-review-card"  )
